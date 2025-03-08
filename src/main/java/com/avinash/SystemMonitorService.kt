@@ -15,7 +15,7 @@ import java.net.InetAddress
 
 data class SystemInfo(
     val systemId: String,
-    val storage: Int,
+    val storage: Long,
     val ram: Int,
     val processor: String,
     val upload_speed: Double,
@@ -39,8 +39,8 @@ class SystemMonitorService {
 
     private val CONFIG_PATH: String = "C:\\ProgramData\\Avinash-Vignan-Info\\config.txt"
 
-    private var systemId = "1009"
-    private var serverUrl = "http://localhost:3000/"
+    private var systemId = "1"
+    private var serverUrl = "http://sought-jennet-nearly.ngrok-free.app/"
 
     private val apiService: ApiService
 
@@ -130,12 +130,13 @@ class SystemMonitorService {
         return executePowerShellCommand("Get-WmiObject Win32_PhysicalMedia | Select-Object -ExpandProperty SerialNumber")
     }
 
-    private fun getDiskSize(): Int {
+    private fun getDiskSize(): Long {
         return try {
-            val result = executePowerShellCommand("Get-WmiObject Win32_DiskDrive | Select-Object -ExpandProperty Size")
+            val result = executePowerShellCommand("""(Get-WmiObject Win32_DiskDrive | Select-Object -ExpandProperty Size | Measure-Object -Sum).Sum""")
             val sizeInBytes = result.trim().toLongOrNull() ?: return 0
-            (sizeInBytes / (1024 * 1024 * 1024)).toInt()
+            (sizeInBytes / (1024 * 1024 * 1024))
         } catch (e: Exception) {
+            e.printStackTrace()
             0
         }
     }
