@@ -100,8 +100,8 @@ class SystemMonitorService {
                 apiService.sendSystemData(systemId, info).enqueue(object : retrofit2.Callback<NormResponse> {
                     override fun onResponse(call: Call<NormResponse>, response: retrofit2.Response<NormResponse>) {
                         if (!response.isSuccessful) {
-                            Logger.appendErrorLog("Internal Server Error: $info, Error: ${response.message()}")
-                            println("Internal Server Error: $info, Error: ${response.message()}")
+                            Logger.appendErrorLog("Failed to send data: $info, Error: ${response.message()}")
+                            println("Failed to send data: $info, Error: ${response.message()}")
                             return
                         }
                         println("Data sent successfully: $info")
